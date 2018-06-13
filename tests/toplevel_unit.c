@@ -215,6 +215,7 @@ void sbs_compare(sbs_t *sbs) {
                            expected_values, expected_cardinality);
     printf("cardinality expected:%u actual=%u\n", expected_cardinality, actual_cardinality);
     if (!ok) {
+      /*
         printf("Expected %u: ", expected_cardinality);
         for (uint32_t i = 0; i < expected_cardinality; i++) {
             printf("%u,", expected_values[i]);
@@ -230,9 +231,10 @@ void sbs_compare(sbs_t *sbs) {
         printf("roaring_bitmap_printf():");
         roaring_bitmap_printf(sbs->roaring);
         printf("\n");
+        */
         
         
-        assert(sbs->roaring->high_low_container.size <= sbs->roaring->high_low_container.allocation_size);
+        printf("size=%u alloc_size=%u\n", sbs->roaring->high_low_container.size, sbs->roaring->high_low_container.allocation_size);
         for (int i = 0; i < sbs->roaring->high_low_container.size; i++) {
           printf("i=%u key=%u type=%u card=%u\n",
                  i,
@@ -244,12 +246,13 @@ void sbs_compare(sbs_t *sbs) {
           
           if (sbs->roaring->high_low_container.typecodes[i] == ARRAY_CONTAINER_TYPE_CODE) {
             array_container_t* array = (array_container_t*)sbs->roaring->high_low_container.containers[i];
-            assert(array->cardinality <= array->capacity);
+            printf("  card=%u cap=%u\n", array->cardinality, array->capacity);
             for (int j = 0; j < array->cardinality; j++) {
               printf("  %u\n", array->array[j]);
             }
           } else if (sbs->roaring->high_low_container.typecodes[i] == RUN_CONTAINER_TYPE_CODE) {
             run_container_t* run = (run_container_t*)sbs->roaring->high_low_container.containers[i];
+            printf("  n_runs=%u cap=%u\n", run->n_runs, run->capacity);
             assert(run->n_runs <= run->capacity);
             for (int j = 0; j < run->n_runs; j++) {
                 printf("  %u %u\n", run->runs[j].value, run->runs[j].length);
