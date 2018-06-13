@@ -3271,6 +3271,7 @@ void test_read_uint32_iterator_native() {
 
 void test_add_range() {
     // autoconversion: BITSET -> BITSET -> RUN
+    printf("mark1\n");
     {
       sbs_t* sbs = sbs_create();
       sbs_add_value(sbs, 100);
@@ -3287,6 +3288,7 @@ void test_add_range() {
     }
 
     // autoconversion: ARRAY -> ARRAY -> BITSET
+    printf("mark2\n");
     {
       sbs_t* sbs = sbs_create();
       sbs_add_value(sbs, 100);
@@ -3309,6 +3311,7 @@ void test_add_range() {
     }
 
      // autoconversion: ARRAY -> RUN
+     printf("mark3\n");
      {
       sbs_t* sbs = sbs_create();
       sbs_add_range(sbs, 0, 100);
@@ -3323,6 +3326,7 @@ void test_add_range() {
     }
 
     // autoconversion: RUN -> RUN -> BITSET
+    printf("mark4\n");
     {
       sbs_t* sbs = sbs_create();
       // by default, RUN container is used
@@ -3340,6 +3344,7 @@ void test_add_range() {
     }
 
     // append new container to the end
+    printf("mark5\n");
     {
       sbs_t* sbs = sbs_create();
       sbs_add_value(sbs, 5);
@@ -3349,6 +3354,7 @@ void test_add_range() {
     }
 
     // prepend new container to the beginning
+    printf("mark6\n");
     {
       sbs_t* sbs = sbs_create();
       sbs_add_value(sbs, 65536*1+5);
@@ -3358,6 +3364,7 @@ void test_add_range() {
     }
 
     // add new container between existing ones
+    printf("mark7\n");
     {
       sbs_t* sbs = sbs_create();
       sbs_add_value(sbs, 65536*0+5);
@@ -3368,6 +3375,7 @@ void test_add_range() {
     }
 
     // invalid range
+    printf("mark8\n");
     {
       sbs_t* sbs = sbs_create();
       sbs_add_range(sbs, 200, 100);
@@ -3376,6 +3384,7 @@ void test_add_range() {
     }
 
     // random data inside [0..span)
+    printf("mark9\n");
     const uint32_t span = 16*65536;
     for (uint32_t range_length = 1; range_length < 16384; range_length *= 3) {
         sbs_t* sbs = sbs_create();
@@ -3392,6 +3401,7 @@ void test_add_range() {
     }
 
     // max range
+    printf("mark10\n");
     {
         roaring_bitmap_t *r = roaring_bitmap_create();
         roaring_bitmap_add_range(r, 0, UINT32_MAX);
@@ -3402,6 +3412,7 @@ void test_add_range() {
 
 int main() {
     const struct CMUnitTest tests[] = {
+    /*
         cmocka_unit_test(test_stress_memory_true),
         cmocka_unit_test(test_stress_memory_false),
         cmocka_unit_test(check_interval),
@@ -3495,6 +3506,7 @@ int main() {
         cmocka_unit_test(test_read_uint32_iterator_bitset),
         cmocka_unit_test(test_read_uint32_iterator_run),
         cmocka_unit_test(test_read_uint32_iterator_native),
+        */
         cmocka_unit_test(test_add_range),
     };
 
