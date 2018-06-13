@@ -44,7 +44,7 @@ static inline int bitset_range_cardinality(uint64_t *bitmap, uint32_t start,
       for (int i = firstword + 1; i < endword; i++) {
           answer += hamming(bitmap[i]);
       }
-      answer += hamming(bitmap[endword] & ((~UINT64_C(0)) >> (64 - (end % 64))));
+      answer += hamming(bitmap[endword] & ((~UINT64_C(0)) >> (63 - ((end-1) % 64))));
     }
     
     int rc = 0;
@@ -57,7 +57,7 @@ static inline int bitset_range_cardinality(uint64_t *bitmap, uint32_t start,
     }
     
     if (rc != answer) {
-      printf("bitset_range_cardinality() answer=%d rc=%d\n", answer, rc);
+      printf("bitset_range_cardinality() answer=%d rc=%d start=%u end=%u\n", answer, rc, start, end);
       for (int i = firstword; i <= endword; i++) {
         printf("[%d]=%llu %d\n", i, bitmap[i], hamming(bitmap[i]));
       }
