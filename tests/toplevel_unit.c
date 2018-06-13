@@ -209,11 +209,14 @@ void sbs_compare(sbs_t *sbs) {
 
     uint32_t actual_cardinality = roaring_bitmap_get_cardinality(sbs->roaring);
     uint32_t *actual_values = malloc(actual_cardinality * sizeof(uint32_t));
+    memset(actual_values, 0, actual_cardinality * sizeof(uint32_t));
     roaring_bitmap_to_uint32_array(sbs->roaring, actual_values);
 
     bool ok = array_equals(actual_values, actual_cardinality,
                            expected_values, expected_cardinality);
     printf("cardinality expected:%u actual=%u\n", expected_cardinality, actual_cardinality);
+    
+    
     if (!ok) {
       /*
         printf("Expected %u: ", expected_cardinality);
@@ -257,6 +260,17 @@ void sbs_compare(sbs_t *sbs) {
             for (int j = 0; j < run->n_runs; j++) {
                 printf("  %u %u\n", run->runs[j].value, run->runs[j].length);
             }
+          } else if (sbs->roaring->high_low_container.typecodes[i] == BITSET_CONTAINER_TYPE_CODE) {
+            bitset_container_t* bitset = (bitset_container_t*) sbs->roaring->high_low_container.containers[i];
+            uint32_t card = 0;
+            for (int j = 0; j < BITSET_CONTAINER_SIZE_IN_WORDS; j++) {
+              uint64_t word = bitset->array[j];
+              while (word != 0) {
+                card++;
+                word = word & (word - 1);
+              }
+            }
+            printf("card=%u computed()=%u robust=%u\n", bitset->cardinality, bitset_container_compute_cardinality(bitset), card);
           }
         }
         
