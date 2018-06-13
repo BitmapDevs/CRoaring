@@ -2195,6 +2195,16 @@ static inline void *container_add_range(void *container, uint8_t type,
             union_cardinality += max - min + 1;
             union_cardinality -= bitset_range_cardinality(bitset->array, min, max + 1);
             
+            int32_t rc = 0;
+            for (uint32_t i = min; i <= max; i++) {
+              if (bitset_container_contains(bitset, i)) {
+                rc++;
+              }
+            }
+            if (rc != bitset_range_cardinality(bitset->array, min, max+1)) {
+              printf("rc1=%d\n", rc);
+            }
+            
             int32_t x1 = bitset->cardinality;
             int32_t x2 = max - min + 1;
             int32_t x3 = bitset_range_cardinality(bitset->array, min, max + 1);
@@ -2209,6 +2219,16 @@ static inline void *container_add_range(void *container, uint8_t type,
                 if (bitset->cardinality != bitset_container_compute_cardinality(bitset)) {
                   printf("cardinality_error BITSET_CONTAINER_TYPE_CODE %u %u %u %u %u\n", x1, x2, x3, bitset->cardinality, bitset_container_compute_cardinality(bitset));
                 }
+                rc = 0;
+              for (uint32_t i = min; i <= max; i++) {
+                if (bitset_container_contains(bitset, i)) {
+                  rc++;
+                }
+              }
+              if (rc != (int32_t)(max-min+1)) {
+                printf("rc2=%d\n", rc);
+              }
+                
                 return bitset;
             }
         }
