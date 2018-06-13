@@ -27,4 +27,4 @@ build_script:
   - ctest
 
 artifacts:
-  - path build
+  - path: build
