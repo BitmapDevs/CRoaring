@@ -3387,6 +3387,7 @@ void test_add_range() {
     printf("mark9\n");
     const uint32_t span = 16*65536;
     for (uint32_t range_length = 1; range_length < 16384; range_length *= 3) {
+        seed = 414048244;
         printf("range_length=%u seed=%d\n", range_length, seed);
         sbs_t* sbs = sbs_create();
         for (int i = 0; i < 50; i++) {
