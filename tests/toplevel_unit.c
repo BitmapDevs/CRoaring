@@ -214,13 +214,16 @@ void sbs_compare(sbs_t *sbs) {
     bool ok = array_equals(actual_values, actual_cardinality,
                            expected_values, expected_cardinality);
     if (!ok) {
-        printf("Expected: ");
+        printf("Expected %u: ", expected_cardinality);
         for (uint32_t i = 0; i < expected_cardinality; i++) {
             printf("%u,", expected_values[i]);
         }
         printf("\n");
 
-        printf("Actual: ");
+        printf("Actual %u: ", actual_cardinality);
+        for (uint32_t i = 0; i < actual_cardinality; i++) {
+            printf("%u,", actual_values[i]);
+        }
         roaring_bitmap_printf(sbs->roaring);
         printf("\n");
     }
