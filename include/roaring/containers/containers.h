@@ -2199,6 +2199,9 @@ static inline void *container_add_range(void *container, uint8_t type,
                 *result_type = BITSET_CONTAINER_TYPE_CODE;
                 bitset_set_range(bitset->array, min, max + 1);
                 bitset->cardinality = union_cardinality;
+                if (bitset->cardinality != bitset_container_compute_cardinality(bitset)) {
+                  printf("cardinality_error BITSET_CONTAINER_TYPE_CODE\n");
+                }
                 return bitset;
             }
         }
@@ -2221,6 +2224,9 @@ static inline void *container_add_range(void *container, uint8_t type,
                 bitset_container_t *bitset = bitset_container_from_array(array);
                 bitset_set_range(bitset->array, min, max + 1);
                 bitset->cardinality = union_cardinality;
+                if (bitset->cardinality != bitset_container_compute_cardinality(bitset)) {
+                  printf("cardinality_error ARRAY_CONTAINER_TYPE_CODE\n");
+                }
                 return bitset;
             }
         }
@@ -2239,7 +2245,11 @@ static inline void *container_add_range(void *container, uint8_t type,
                 return run;
             } else {
                 *result_type = BITSET_CONTAINER_TYPE_CODE;
-                return bitset_container_from_run_range(run, min, max);
+                bitset_container_t* bitset = bitset_container_from_run_range(run, min, max);
+                if (bitset->cardinality != bitset_container_compute_cardinality(bitset)) {
+                  printf("cardinality_error RUN_CONTAINER_TYPE_CODE\n");
+                }
+                return bitset;
             }
         }
         default:

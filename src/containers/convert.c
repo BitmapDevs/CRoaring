@@ -292,8 +292,8 @@ void *convert_run_optimize(void *c, uint8_t typecode_original,
     }
 }
 
-void *bitset_container_from_run_range(const run_container_t *run,
-                                      uint32_t min, uint32_t max) {
+bitset_container_t *bitset_container_from_run_range(const run_container_t *run,
+                                                    uint32_t min, uint32_t max) {
     bitset_container_t *bitset = bitset_container_create();
     int32_t union_cardinality = 0;
     for (int32_t i = 0; i < run->n_runs; ++i) {

@@ -270,7 +270,7 @@ void sbs_compare(sbs_t *sbs) {
                 word = word & (word - 1);
               }
             }
-            printf("card=%u computed()=%u robust=%u\n", bitset->cardinality, bitset_container_compute_cardinality(bitset), card);
+            printf("  card=%u computed()=%u robust=%u\n", bitset->cardinality, bitset_container_compute_cardinality(bitset), card);
           }
         }
         
