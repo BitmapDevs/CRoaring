@@ -227,11 +227,11 @@ void sbs_compare(sbs_t *sbs) {
             printf("%u,", actual_values[i]);
         }
         printf("\n");
+        */
         
         printf("roaring_bitmap_printf():");
         roaring_bitmap_printf(sbs->roaring);
         printf("\n");
-        */
         
         
         printf("size=%u alloc_size=%u\n", sbs->roaring->high_low_container.size, sbs->roaring->high_low_container.allocation_size);
