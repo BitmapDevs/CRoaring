@@ -2186,11 +2186,18 @@ static inline void *container_add_range(void *container, uint8_t type,
     switch (type) {
         case BITSET_CONTAINER_TYPE_CODE: {
             bitset_container_t *bitset = (bitset_container_t *) container;
+                if (bitset->cardinality != bitset_container_compute_cardinality(bitset)) {
+                  printf("cardinality_error input BITSET_CONTAINER_TYPE_CODE\n");
+                }
 
             int32_t union_cardinality = 0;
             union_cardinality += bitset->cardinality;
             union_cardinality += max - min + 1;
             union_cardinality -= bitset_range_cardinality(bitset->array, min, max + 1);
+            
+            int32_t x1 = bitset->cardinality;
+            int32_t x2 = max - min + 1;
+            int32_t x3 = bitset_range_cardinality(bitset->array, min, max + 1);
 
             if (union_cardinality == INT32_C(0x10000)) {
                 *result_type = RUN_CONTAINER_TYPE_CODE;
@@ -2200,7 +2207,7 @@ static inline void *container_add_range(void *container, uint8_t type,
                 bitset_set_range(bitset->array, min, max + 1);
                 bitset->cardinality = union_cardinality;
                 if (bitset->cardinality != bitset_container_compute_cardinality(bitset)) {
-                  printf("cardinality_error BITSET_CONTAINER_TYPE_CODE\n");
+                  printf("cardinality_error BITSET_CONTAINER_TYPE_CODE %u %u %u %u %u\n", x1, x2, x3, bitset->cardinality, bitset_container_compute_cardinality(bitset));
                 }
                 return bitset;
             }
