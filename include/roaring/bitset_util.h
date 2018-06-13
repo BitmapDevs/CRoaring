@@ -34,16 +34,35 @@ static inline int bitset_range_cardinality(uint64_t *bitmap, uint32_t start,
     }
     int firstword = start / 64;
     int endword = (end - 1) / 64;
+    int answer = 0;
     if (firstword == endword) {
-        return hamming(bitmap[firstword] &
+        answer = hamming(bitmap[firstword] &
                        (((~UINT64_C(0)) << (start % 64)) &
                         ((~UINT64_C(0)) >> (64 - (end % 64)))));
+    } else {
+      answer = hamming(bitmap[firstword] & ((~UINT64_C(0)) << (start % 64)));
+      for (int i = firstword + 1; i < endword; i++) {
+          answer += hamming(bitmap[i]);
+      }
+      answer += hamming(bitmap[endword] & ((~UINT64_C(0)) >> (64 - (end % 64))));
     }
-    int answer = hamming(bitmap[firstword] & ((~UINT64_C(0)) << (start % 64)));
-    for (int i = firstword + 1; i < endword; i++) {
-        answer += hamming(bitmap[i]);
+    
+    int rc = 0;
+    for (uint32_t pos = start; pos < end; pos++) {
+      const uint64_t word = bitmap[pos >> 6];
+      bool present = (word >> (pos & 63)) & 1;
+      if (present) {
+        rc++;
+      }
     }
-    answer += hamming(bitmap[endword] & ((~UINT64_C(0)) >> (64 - (end % 64))));
+    
+    if (rc != answer) {
+      printf("bitset_range_cardinality() answer=%d rc=%d\n", answer, rc);
+      for (int i = firstword; i <= endword; i++) {
+        printf("[%d]=%llu %d\n", i, bitmap[i], hamming(bitmap[i]));
+      }
+    }
+    
     return answer;
 }
 
