@@ -21,4 +21,6 @@ build_script:
   - cmake --build .
   - dir
   - dir tests
-  - tests\toplevel_unit
+  - dir tests/toplevel_unit.dir
+  - dir tests/Debug
+  - tests\Debug\toplevel_unit
